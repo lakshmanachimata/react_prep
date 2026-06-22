@@ -140,7 +140,7 @@ main {
 .fruit-checkbox-label {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1rem;
   cursor: pointer;
 }
 
@@ -155,6 +155,7 @@ main {
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
+  text-align: left;
 }
 
 .fruit-empty {
