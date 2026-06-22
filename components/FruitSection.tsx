@@ -26,7 +26,7 @@ const ALL_FRUITS = [
   "Watermelon",
 ];
 
-export default function FruitSection() {
+export default function FruitSection({showFruitList = false}) {
   const [query, setQuery] = useState("");
 
   const filteredFruits = useMemo(() => {
@@ -41,7 +41,7 @@ export default function FruitSection() {
   return (
     <>
       <FruitSearch value={query} onChange={setQuery} />
-      <FruitList fruits={filteredFruits} />
+      { showFruitList && <FruitList fruits={filteredFruits} /> }
     </>
   );
 }
