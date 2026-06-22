@@ -1,21 +1,16 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Child from "@/components/prop-drilling/Child";
+import RenderDebugBadge from "@/components/RenderDebugBadge";
+import { useRenderDebug } from "@/hooks/useRenderDebug";
 
 export default function PropRoot() {
   const [name, setName] = useState("Alex");
   const [age, setAge] = useState(28);
   const [gender, setGender] = useState("Non-binary");
   const [mounted, setMounted] = useState(false);
-  const renderCount = useRef(0);
-  renderCount.current += 1;
-
-  console.log(`[PropRoot] render #${renderCount.current}`, {
-    name,
-    age,
-    gender,
-  });
+  const { count } = useRenderDebug("PropRoot", { name, age, gender });
 
   useEffect(() => {
     setMounted(true);
@@ -23,11 +18,7 @@ export default function PropRoot() {
 
   return (
     <section className="prop-root">
-      {mounted && (
-        <p className="welcome-render-count">
-          PropRoot render #{renderCount.current}
-        </p>
-      )}
+      {mounted && <RenderDebugBadge name="PropRoot" count={count} />}
       <h2>Prop Drilling</h2>
       <p className="drill-description">
         User info lives in PropRoot. Child passes name, age, and gender down to

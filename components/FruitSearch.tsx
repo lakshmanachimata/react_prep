@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import RenderDebugBadge from "@/components/RenderDebugBadge";
+import { useRenderDebug } from "@/hooks/useRenderDebug";
 
 type FruitSearchProps = {
   value: string;
@@ -9,10 +11,7 @@ type FruitSearchProps = {
 
 export default function FruitSearch({ value, onChange }: FruitSearchProps) {
   const [mounted, setMounted] = useState(false);
-  const renderCount = useRef(0);
-  renderCount.current += 1;
-
-  console.log(`[FruitSearch] render #${renderCount.current}`, { value });
+  const { count } = useRenderDebug("FruitSearch", { value });
 
   useEffect(() => {
     setMounted(true);
@@ -20,11 +19,7 @@ export default function FruitSearch({ value, onChange }: FruitSearchProps) {
 
   return (
     <section className="fruit-debug fruit-search-debug">
-      {mounted && (
-        <p className="welcome-render-count">
-          FruitSearch render #{renderCount.current}
-        </p>
-      )}
+      {mounted && <RenderDebugBadge name="FruitSearch" count={count} />}
       <form className="name-form" onSubmit={(event) => event.preventDefault()}>
         <input
           type="text"

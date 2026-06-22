@@ -1,6 +1,9 @@
 "use client";
 
 import { FormEvent, useEffect, useRef, useState } from "react";
+import RenderDebugBadge from "@/components/RenderDebugBadge";
+import { useRenderDebug } from "@/hooks/useRenderDebug";
+import { debugLog } from "@/lib/debugLog";
 
 type NameFormProps = {
   onSubmit: (name: string) => void;
@@ -15,19 +18,13 @@ export default function NameForm({
 }: NameFormProps) {
   const [input, setInput] = useState("");
   const [mounted, setMounted] = useState(false);
-  const renderCount = useRef(0);
+  const { count, countRef } = useRenderDebug("NameForm", { input });
   const lastRan = useRef(0);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pendingValue = useRef(input);
 
-  renderCount.current += 1;
-  console.log(`[NameForm] render #${renderCount.current}`, { input });
-
   useEffect(() => {
     setMounted(true);
-  }, []);
-
-  useEffect(() => {
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
@@ -61,7 +58,9 @@ export default function NameForm({
     timeoutRef.current = setTimeout(() => {
       timeoutRef.current = null;
       lastRan.current = Date.now();
-      console.log(`[NameForm] flushThrottle #${renderCount.current}`, { pendingValue: pendingValue.current });
+      debugLog(`[NameForm] flushThrottle #${countRef.current}`, {
+        pendingValue: pendingValue.current,
+      });
       notifyParent(pendingValue.current);
     }, throttleMs - elapsed);
   }
@@ -79,9 +78,7 @@ export default function NameForm({
 
   return (
     <section className="welcome-debug name-form-debug">
-      {mounted && (
-        <p className="welcome-render-count">NameForm render #{renderCount.current}</p>
-      )}
+      {mounted && <RenderDebugBadge name="NameForm" count={count} />}
       <form className="name-form" onSubmit={handleSubmit}>
         <input
           type="text"

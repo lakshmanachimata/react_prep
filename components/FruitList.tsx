@@ -1,6 +1,8 @@
 "use client";
 
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useEffect, useState } from "react";
+import RenderDebugBadge from "@/components/RenderDebugBadge";
+import { useRenderDebug } from "@/hooks/useRenderDebug";
 
 type FruitListProps = {
   fruits: string[];
@@ -8,10 +10,7 @@ type FruitListProps = {
 
 function FruitList({ fruits }: FruitListProps) {
   const [mounted, setMounted] = useState(false);
-  const renderCount = useRef(0);
-  renderCount.current += 1;
-
-  console.log(`[FruitList] render #${renderCount.current}`, {
+  const { count } = useRenderDebug("FruitList", {
     count: fruits.length,
     fruits,
   });
@@ -22,11 +21,7 @@ function FruitList({ fruits }: FruitListProps) {
 
   return (
     <section className="fruit-debug fruit-list-debug">
-      {mounted && (
-        <p className="welcome-render-count">
-          FruitList render #{renderCount.current}
-        </p>
-      )}
+      {mounted && <RenderDebugBadge name="FruitList" count={count} />}
       <h2>Fruits ({fruits.length})</h2>
       {fruits.length === 0 ? (
         <p className="fruit-empty">No fruits match your search.</p>

@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import RenderDebugBadge from "@/components/RenderDebugBadge";
+import { useRenderDebug } from "@/hooks/useRenderDebug";
 
 type FruitCheckboxProps = {
   checked: boolean;
@@ -9,10 +11,7 @@ type FruitCheckboxProps = {
 
 export default function FruitCheckbox({ checked, onChange }: FruitCheckboxProps) {
   const [mounted, setMounted] = useState(false);
-  const renderCount = useRef(0);
-  renderCount.current += 1;
-
-  console.log(`[FruitCheckbox] render #${renderCount.current}`, { checked });
+  const { count } = useRenderDebug("FruitCheckbox", { checked });
 
   useEffect(() => {
     setMounted(true);
@@ -20,11 +19,7 @@ export default function FruitCheckbox({ checked, onChange }: FruitCheckboxProps)
 
   return (
     <section className="fruit-debug fruit-checkbox-debug">
-      {mounted && (
-        <p className="welcome-render-count">
-          FruitCheckbox render #{renderCount.current}
-        </p>
-      )}
+      {mounted && <RenderDebugBadge name="FruitCheckbox" count={count} />}
       <label className="fruit-checkbox-label">
         <input
           type="checkbox"

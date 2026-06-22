@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import RenderDebugBadge from "@/components/RenderDebugBadge";
+import { useRenderDebug } from "@/hooks/useRenderDebug";
 
 type WelcomeProps = {
   name?: string;
@@ -12,10 +14,7 @@ export default function Welcome({
   message = "Welcome to your Next.js app.",
 }: WelcomeProps) {
   const [mounted, setMounted] = useState(false);
-  const renderCount = useRef(0);
-  renderCount.current += 1;
-
-  console.log(`[Welcome] render #${renderCount.current}`, { name, message });
+  const { count } = useRenderDebug("Welcome", { name, message });
 
   useEffect(() => {
     setMounted(true);
@@ -23,9 +22,7 @@ export default function Welcome({
 
   return (
     <section className="welcome-debug">
-      {mounted && (
-        <p className="welcome-render-count">Render #{renderCount.current}</p>
-      )}
+      {mounted && <RenderDebugBadge name="Welcome" count={count} />}
       <h1>Hello, {name}!</h1>
       <p>{message}</p>
     </section>

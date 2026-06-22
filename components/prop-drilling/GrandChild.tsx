@@ -1,18 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import type { UserProps } from "@/components/prop-drilling/types";
+import RenderDebugBadge from "@/components/RenderDebugBadge";
+import { useRenderDebug } from "@/hooks/useRenderDebug";
 
 export default function GrandChild({ name, age, gender }: UserProps) {
   const [mounted, setMounted] = useState(false);
-  const renderCount = useRef(0);
-  renderCount.current += 1;
-
-  console.log(`[GrandChild] render #${renderCount.current}`, {
-    name,
-    age,
-    gender,
-  });
+  const { count } = useRenderDebug("GrandChild", { name, age, gender });
 
   useEffect(() => {
     setMounted(true);
@@ -20,11 +15,7 @@ export default function GrandChild({ name, age, gender }: UserProps) {
 
   return (
     <div className="prop-grandchild">
-      {mounted && (
-        <p className="welcome-render-count">
-          GrandChild render #{renderCount.current}
-        </p>
-      )}
+      {mounted && <RenderDebugBadge name="GrandChild" count={count} />}
       <h3>User profile</h3>
       <ul className="prop-user-list">
         <li>
