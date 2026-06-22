@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 
 type FruitListProps = {
   fruits: string[];
 };
 
-export default function FruitList({ fruits }: FruitListProps) {
+function FruitList({ fruits }: FruitListProps) {
   const [mounted, setMounted] = useState(false);
   const renderCount = useRef(0);
   renderCount.current += 1;
@@ -40,3 +40,11 @@ export default function FruitList({ fruits }: FruitListProps) {
     </section>
   );
 }
+
+function fruitsAreEqual(a: string[], b: string[]) {
+  return a.length === b.length && a.every((fruit, index) => fruit === b[index]);
+}
+
+export default memo(FruitList, (prev, next) =>
+  fruitsAreEqual(prev.fruits, next.fruits),
+);
