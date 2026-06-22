@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import FruitCheckbox from "@/components/FruitCheckbox";
 import FruitList from "@/components/FruitList";
 import FruitSearch from "@/components/FruitSearch";
 
@@ -26,7 +27,8 @@ const ALL_FRUITS = [
   "Watermelon",
 ];
 
-export default function FruitSection({showFruitList = false}) {
+export default function FruitSection() {
+  const [showFruits, setShowFruits] = useState(false);
   const [query, setQuery] = useState("");
 
   const filteredFruits = useMemo(() => {
@@ -40,8 +42,13 @@ export default function FruitSection({showFruitList = false}) {
 
   return (
     <>
-      <FruitSearch value={query} onChange={setQuery} />
-      { showFruitList && <FruitList fruits={filteredFruits} /> }
+      <FruitCheckbox checked={showFruits} onChange={setShowFruits} />
+      {showFruits && (
+        <>
+          <FruitSearch value={query} onChange={setQuery} />
+          <FruitList fruits={filteredFruits} />
+        </>
+      )}
     </>
   );
 }

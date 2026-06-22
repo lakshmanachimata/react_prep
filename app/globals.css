@@ -133,6 +133,17 @@ main {
   animation-name: fruit-search-flash;
 }
 
+.fruit-checkbox-debug {
+  animation-name: fruit-checkbox-flash;
+}
+
+.fruit-checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
 .fruit-list-debug {
   animation-name: fruit-list-flash;
   text-align: left;
@@ -155,6 +166,18 @@ main {
   0% {
     box-shadow: 0 0 0 3px #10b981;
     background: rgba(16, 185, 129, 0.15);
+  }
+
+  100% {
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+    background: transparent;
+  }
+}
+
+@keyframes fruit-checkbox-flash {
+  0% {
+    box-shadow: 0 0 0 3px #ec4899;
+    background: rgba(236, 72, 153, 0.15);
   }
 
   100% {
