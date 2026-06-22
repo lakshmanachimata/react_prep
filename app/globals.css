@@ -55,9 +55,11 @@ main {
 .name-form {
   display: flex;
   gap: 0.5rem;
+  width: 100%;
 }
 
 .name-form input {
+  flex: 1;
   padding: 0.5rem 0.75rem;
   border: 1px solid #ccc;
   border-radius: 0.375rem;
@@ -112,6 +114,59 @@ main {
   0% {
     box-shadow: 0 0 0 3px #3b82f6;
     background: rgba(59, 130, 246, 0.15);
+  }
+
+  100% {
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+    background: transparent;
+  }
+}
+
+.fruit-debug {
+  padding: 1rem 1.25rem;
+  border-radius: 0.5rem;
+  text-align: center;
+  animation: welcome-flash 0.6s ease-out;
+}
+
+.fruit-search-debug {
+  animation-name: fruit-search-flash;
+}
+
+.fruit-list-debug {
+  animation-name: fruit-list-flash;
+  text-align: left;
+}
+
+.fruit-list {
+  list-style: none;
+  margin-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.fruit-empty {
+  margin-top: 0.75rem;
+  opacity: 0.7;
+}
+
+@keyframes fruit-search-flash {
+  0% {
+    box-shadow: 0 0 0 3px #10b981;
+    background: rgba(16, 185, 129, 0.15);
+  }
+
+  100% {
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+    background: transparent;
+  }
+}
+
+@keyframes fruit-list-flash {
+  0% {
+    box-shadow: 0 0 0 3px #8b5cf6;
+    background: rgba(139, 92, 246, 0.15);
   }
 
   100% {
