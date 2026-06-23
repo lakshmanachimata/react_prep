@@ -4,7 +4,7 @@ import { memo, useMemo, useState, useTransition } from "react";
 import RenderDebugBadge from "@/components/RenderDebugBadge";
 import { useRenderDebug } from "@/hooks/useRenderDebug";
 
-const ITEMS = Array.from({ length: 120 }, (_, index) => `fruit-${index + 1}`);
+const ITEMS = Array.from({ length: 12000 }, (_, index) => `fruit-${index + 1}`);
 
 function TransitionListPanel({
   query,
@@ -72,7 +72,7 @@ function UseTransitionDemo() {
         onChange={(event) => handleChange(event.target.value)}
         placeholder="Type to filter..."
       />
-      <p>isPending: <strong>{String(isPending)}</strong></p>
+      <p>results state: <strong>{isPending ? "filtering..." : "ready"}</strong></p>
       <TransitionListPanel query={query} isPending={isPending} />
     </section>
   );
