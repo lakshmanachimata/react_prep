@@ -450,6 +450,21 @@ main {
   gap: 0.75rem;
 }
 
+.redux-demo-layer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  border-left: 3px solid rgba(59, 130, 246, 0.45);
+}
+
+.redux-demo-leaves {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
 .layout-measure-panel {
   overflow: hidden;
 }

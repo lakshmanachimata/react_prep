@@ -13,6 +13,14 @@ const UseCallbackDemo = dynamic(() => import("@/components/UseCallbackDemo"), {
 const UseReducerDemo = dynamic(() => import("@/components/UseReducerDemo"), {
   ssr: false,
 });
+const ReduxDemo = dynamic(() => import("@/components/ReduxDemo"), { ssr: false });
+const ContextApiDemo = dynamic(() => import("@/components/ContextApiDemo"), {
+  ssr: false,
+});
+const ContextAlternativesDemo = dynamic(
+  () => import("@/components/ContextAlternativesDemo"),
+  { ssr: false },
+);
 const UseTransitionDemo = dynamic(() => import("@/components/UseTransitionDemo"), {
   ssr: false,
 });
@@ -38,6 +46,9 @@ export default function HookDemosSection() {
   const [showMemo, setShowMemo] = useState(false);
   const [showCallback, setShowCallback] = useState(false);
   const [showReducer, setShowReducer] = useState(false);
+  const [showRedux, setShowRedux] = useState(false);
+  const [showContext, setShowContext] = useState(false);
+  const [showContextAlternatives, setShowContextAlternatives] = useState(false);
   const [showTransition, setShowTransition] = useState(false);
   const [showDeferred, setShowDeferred] = useState(false);
   const [showLayoutEffect, setShowLayoutEffect] = useState(false);
@@ -71,6 +82,27 @@ export default function HookDemosSection() {
       enabled: showReducer,
       onChange: setShowReducer,
       content: showReducer && <UseReducerDemo />,
+    },
+    {
+      id: "redux",
+      label: "Show Redux demo",
+      enabled: showRedux,
+      onChange: setShowRedux,
+      content: showRedux && <ReduxDemo />,
+    },
+    {
+      id: "context",
+      label: "Show Context API demo",
+      enabled: showContext,
+      onChange: setShowContext,
+      content: showContext && <ContextApiDemo />,
+    },
+    {
+      id: "context-alternatives",
+      label: "Show context alternatives demo",
+      enabled: showContextAlternatives,
+      onChange: setShowContextAlternatives,
+      content: showContextAlternatives && <ContextAlternativesDemo />,
     },
     {
       id: "transition",
