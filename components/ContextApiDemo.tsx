@@ -6,7 +6,7 @@ import { UserProvider, useUser } from "@/components/context/userContext";
 import { useRenderDebug } from "@/hooks/useRenderDebug";
 
 function ContextUserForm() {
-  // Consumer of UserContext — re-renders whenever Provider `value` changes.
+  // Consumer of UserContext — re-renders whenever context `value` changes.
   const { name, age, gender, setName, setAge, setGender } = useUser();
   const { count } = useRenderDebug("ContextUserForm", { name, age, gender });
 
@@ -65,7 +65,7 @@ function ContextChild() {
 }
 
 function ContextGrandChild() {
-  // Subscribes to context — re-renders when any field in Provider `value` changes.
+  // Subscribes to context — re-renders when any field in context `value` changes.
   const { name, age, gender } = useUser();
   const { count } = useRenderDebug("ContextGrandChild", { name, age, gender });
 
@@ -112,8 +112,8 @@ function ContextApiDemo() {
       <RenderDebugBadge name="ContextApiDemo" count={count} />
       <h2>Context API playground</h2>
       <p className="drill-description">
-        <code>createContext</code> + <code>Provider</code> share state with deep
-        components via <code>useContext</code> (here wrapped as{" "}
+        <code>createContext</code> + <code>&lt;UserContext value=...&gt;</code> share
+        state with deep components via <code>useContext</code> (here wrapped as{" "}
         <code>useUser</code>) — no prop drilling through the middle layer.
       </p>
 
@@ -136,7 +136,7 @@ function ContextApiDemo() {
         <h3>Context caveats</h3>
         <ul className="effect-demo-legend">
           <li>
-            <strong>All consumers re-render</strong> when the provider{" "}
+            <strong>All consumers re-render</strong> when the context{" "}
             <code>value</code> changes (one big context object here).
           </li>
           <li>
@@ -150,7 +150,7 @@ function ContextApiDemo() {
         </ul>
       </div>
 
-      {/* Provider publishes { name, age, gender, setters } — see userContext.tsx */}
+      {/* UserProvider renders <UserContext value={...}> — see userContext.tsx */}
       <UserProvider>
         <ContextApiDemoTree />
       </UserProvider>

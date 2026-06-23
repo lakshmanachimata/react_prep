@@ -31,10 +31,11 @@ export function SplitUserProvider({ children }: { children: ReactNode }) {
     [],
   );
 
+  // React 19: nest contexts with <Context value={...}> instead of <Context.Provider>.
   return (
-    <UserDispatchContext.Provider value={dispatch}>
-      <UserStateContext.Provider value={user}>{children}</UserStateContext.Provider>
-    </UserDispatchContext.Provider>
+    <UserDispatchContext value={dispatch}>
+      <UserStateContext value={user}>{children}</UserStateContext>
+    </UserDispatchContext>
   );
 }
 

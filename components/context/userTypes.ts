@@ -7,5 +7,5 @@ export type UserData = {
 export const defaultUser: UserData = {
   name: "Alex",
   age: 28,
-  gender: "Non-binary",
+  gender: "Male",
 };
