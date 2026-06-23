@@ -14,6 +14,7 @@ import { useRenderDebug } from "@/hooks/useRenderDebug";
 // --- Alternative 1: component composition (children slot) ---
 
 function CompositionProfile({ name, age, gender }: UserData) {
+  // Leaf receives explicit props — easy to trace, unlike context.
   const { count } = useRenderDebug("CompositionProfile", { name, age, gender });
 
   return (
@@ -37,6 +38,7 @@ function CompositionProfile({ name, age, gender }: UserData) {
 
 // Shell only accepts `children` — no user props in its API.
 function CompositionShell({ children }: { children: ReactNode }) {
+  // Layout wrapper: renders slot content without knowing user field names.
   const { count } = useRenderDebug("CompositionShell");
 
   return (
@@ -51,6 +53,7 @@ function CompositionShell({ children }: { children: ReactNode }) {
 }
 
 function CompositionPanel() {
+  // State stays in the parent closest to where it is edited and displayed.
   const [name, setName] = useState(defaultUser.name);
   const [age, setAge] = useState(defaultUser.age);
   const [gender, setGender] = useState(defaultUser.gender);
@@ -94,6 +97,7 @@ function CompositionPanel() {
           />
         </label>
       </form>
+      {/* Profile is created here — shell only renders the children slot */}
       <CompositionShell>
         <CompositionProfile name={name} age={age} gender={gender} />
       </CompositionShell>
@@ -151,6 +155,8 @@ function SplitUserForm() {
 
 // Subscribes only to dispatch context — render count should stay flat while typing.
 function SplitDispatchOnlyPanel() {
+  // useUserDispatch() only — not subscribed to UserStateContext, so typing in the form
+  // above should not bump this render badge (dispatch object is stable).
   const { setAge } = useUserDispatch();
   const { count } = useRenderDebug("SplitDispatchOnlyPanel");
 
@@ -169,6 +175,7 @@ function SplitDispatchOnlyPanel() {
 }
 
 function SplitContextBridge() {
+  // Pass-through layer — no context hooks, same idea as ContextChild in the API demo.
   const { count } = useRenderDebug("SplitContextBridge");
 
   return (
@@ -181,6 +188,7 @@ function SplitContextBridge() {
 }
 
 function SplitContextProfile() {
+  // Subscribes only to state context — re-renders when user data changes.
   const { name, age, gender } = useUserState();
   const { count } = useRenderDebug("SplitContextProfile", { name, age, gender });
 
@@ -215,6 +223,7 @@ function SplitContextPanel() {
         <code>UserDispatchContext</code>. Dispatch value is stable, so components
         that only call setters avoid extra re-renders from unrelated state reads.
       </p>
+      {/* Two providers: stable dispatch outside, changing user state inside — see splitUserContext.tsx */}
       <SplitUserProvider>
         <SplitUserForm />
         <SplitDispatchOnlyPanel />
@@ -268,4 +277,5 @@ function ContextAlternativesDemo() {
   );
 }
 
+// Skips re-rendering this shell when HookDemosSection re-renders with the same props (none here).
 export default memo(ContextAlternativesDemo);

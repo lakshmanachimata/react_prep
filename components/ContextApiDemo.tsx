@@ -6,6 +6,7 @@ import { UserProvider, useUser } from "@/components/context/userContext";
 import { useRenderDebug } from "@/hooks/useRenderDebug";
 
 function ContextUserForm() {
+  // Consumer of UserContext — re-renders whenever Provider `value` changes.
   const { name, age, gender, setName, setAge, setGender } = useUser();
   const { count } = useRenderDebug("ContextUserForm", { name, age, gender });
 
@@ -16,6 +17,7 @@ function ContextUserForm() {
         className="prop-user-form"
         onSubmit={(event) => event.preventDefault()}
       >
+        {/* setters come from context instead of props drilled from PropRoot */}
         <label>
           Name
           <input
@@ -48,6 +50,7 @@ function ContextUserForm() {
 
 // Middle layer: no user props in the API — compare to prop-drilling Child.
 function ContextChild() {
+  // Does not call useUser(), but still re-renders when ContextApiDemoTree re-renders.
   const { count } = useRenderDebug("ContextChild");
 
   return (
@@ -62,6 +65,7 @@ function ContextChild() {
 }
 
 function ContextGrandChild() {
+  // Subscribes to context — re-renders when any field in Provider `value` changes.
   const { name, age, gender } = useUser();
   const { count } = useRenderDebug("ContextGrandChild", { name, age, gender });
 
@@ -88,6 +92,7 @@ function ContextGrandChild() {
 }
 
 function ContextApiDemoTree() {
+  // Renders inside <UserProvider> — descendants can call useUser().
   const { count } = useRenderDebug("ContextApiDemoTree");
 
   return (
@@ -145,6 +150,7 @@ function ContextApiDemo() {
         </ul>
       </div>
 
+      {/* Provider publishes { name, age, gender, setters } — see userContext.tsx */}
       <UserProvider>
         <ContextApiDemoTree />
       </UserProvider>
@@ -152,4 +158,5 @@ function ContextApiDemo() {
   );
 }
 
+// Skips re-rendering this shell when HookDemosSection re-renders with the same props (none here).
 export default memo(ContextApiDemo);
