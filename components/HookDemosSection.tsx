@@ -21,6 +21,10 @@ const ContextAlternativesDemo = dynamic(
   () => import("@/components/ContextAlternativesDemo"),
   { ssr: false },
 );
+const ContextOverrideDemo = dynamic(
+  () => import("@/components/ContextOverrideDemo"),
+  { ssr: false },
+);
 const UseTransitionDemo = dynamic(() => import("@/components/UseTransitionDemo"), {
   ssr: false,
 });
@@ -49,6 +53,7 @@ export default function HookDemosSection() {
   const [showRedux, setShowRedux] = useState(false);
   const [showContext, setShowContext] = useState(false);
   const [showContextAlternatives, setShowContextAlternatives] = useState(false);
+  const [showContextOverride, setShowContextOverride] = useState(false);
   const [showTransition, setShowTransition] = useState(false);
   const [showDeferred, setShowDeferred] = useState(false);
   const [showLayoutEffect, setShowLayoutEffect] = useState(false);
@@ -103,6 +108,13 @@ export default function HookDemosSection() {
       enabled: showContextAlternatives,
       onChange: setShowContextAlternatives,
       content: showContextAlternatives && <ContextAlternativesDemo />,
+    },
+    {
+      id: "context-override",
+      label: "Show context override demo",
+      enabled: showContextOverride,
+      onChange: setShowContextOverride,
+      content: showContextOverride && <ContextOverrideDemo />,
     },
     {
       id: "transition",

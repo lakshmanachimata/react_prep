@@ -94,7 +94,6 @@ function ContextGrandChild() {
 function ContextApiDemoTree() {
   // Renders inside <UserProvider> — descendants can call useUser().
   const { count } = useRenderDebug("ContextApiDemoTree");
-
   return (
     <>
       <RenderDebugBadge name="ContextApiDemoTree" count={count} />
@@ -145,7 +144,7 @@ function ContextApiDemo() {
           </li>
           <li>
             <strong>Harder to trace</strong> than explicit props — see the
-            alternatives demo for composition and split context.
+            alternatives demo for split context.
           </li>
         </ul>
       </div>

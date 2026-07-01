@@ -19,10 +19,17 @@ type UserContextValue = UserData & {
 // `null` default lets useUser() detect missing <UserContext> wrapper (see guard below).
 const UserContext = createContext<UserContextValue | null>(null);
 
-export function UserProvider({ children }: { children: ReactNode }) {
-  const [name, setName] = useState(defaultUser.name);
-  const [age, setAge] = useState(defaultUser.age);
-  const [gender, setGender] = useState(defaultUser.gender);
+export function UserProvider({
+  children,
+  initialUser = defaultUser,
+}: {
+  children: ReactNode;
+  // Lets a nested <UserProvider> supply a different starting user (context override).
+  initialUser?: UserData;
+}) {
+  const [name, setName] = useState(initialUser.name);
+  const [age, setAge] = useState(initialUser.age);
+  const [gender, setGender] = useState(initialUser.gender);
 
   // Bundle state + setters into one `value` passed to <UserContext value={...}>.
   // New object whenever name/age/gender change — all useUser() consumers re-render.
