@@ -44,6 +44,31 @@ const UseLayoutEffectDemo = dynamic(
   () => import("@/components/UseLayoutEffectDemo"),
   { ssr: false },
 );
+const UseIdDemo = dynamic(() => import("@/components/UseIdDemo"), { ssr: false });
+const ForwardRefDemo = dynamic(() => import("@/components/ForwardRefDemo"), {
+  ssr: false,
+});
+const ErrorBoundaryDemo = dynamic(() => import("@/components/ErrorBoundaryDemo"), {
+  ssr: false,
+});
+const SuspenseLazyDemo = dynamic(() => import("@/components/SuspenseLazyDemo"), {
+  ssr: false,
+});
+const KeysReconciliationDemo = dynamic(
+  () => import("@/components/KeysReconciliationDemo"),
+  { ssr: false },
+);
+const UseOptimisticDemo = dynamic(() => import("@/components/UseOptimisticDemo"), {
+  ssr: false,
+});
+const UseActionStateDemo = dynamic(
+  () => import("@/components/UseActionStateDemo"),
+  { ssr: false },
+);
+const ControlledVsUncontrolledDemo = dynamic(
+  () => import("@/components/ControlledVsUncontrolledDemo"),
+  { ssr: false },
+);
 
 type DemoToggle = {
   id: string;
@@ -69,6 +94,14 @@ export default function HookDemosSection() {
   const [showTransition, setShowTransition] = useState(false);
   const [showDeferred, setShowDeferred] = useState(false);
   const [showLayoutEffect, setShowLayoutEffect] = useState(false);
+  const [showUseId, setShowUseId] = useState(false);
+  const [showForwardRef, setShowForwardRef] = useState(false);
+  const [showErrorBoundary, setShowErrorBoundary] = useState(false);
+  const [showSuspenseLazy, setShowSuspenseLazy] = useState(false);
+  const [showKeys, setShowKeys] = useState(false);
+  const [showOptimistic, setShowOptimistic] = useState(false);
+  const [showActionState, setShowActionState] = useState(false);
+  const [showControlled, setShowControlled] = useState(false);
   const { count } = useRenderDebug("HookDemosSection");
 
   const demos: DemoToggle[] = [
@@ -176,6 +209,62 @@ export default function HookDemosSection() {
       enabled: showLayoutEffect,
       onChange: setShowLayoutEffect,
       content: showLayoutEffect && <UseLayoutEffectDemo />,
+    },
+    {
+      id: "use-id",
+      label: "Show useId demo",
+      enabled: showUseId,
+      onChange: setShowUseId,
+      content: showUseId && <UseIdDemo />,
+    },
+    {
+      id: "forward-ref",
+      label: "Show forwardRef demo",
+      enabled: showForwardRef,
+      onChange: setShowForwardRef,
+      content: showForwardRef && <ForwardRefDemo />,
+    },
+    {
+      id: "error-boundary",
+      label: "Show error boundary demo",
+      enabled: showErrorBoundary,
+      onChange: setShowErrorBoundary,
+      content: showErrorBoundary && <ErrorBoundaryDemo />,
+    },
+    {
+      id: "suspense-lazy",
+      label: "Show Suspense + lazy demo",
+      enabled: showSuspenseLazy,
+      onChange: setShowSuspenseLazy,
+      content: showSuspenseLazy && <SuspenseLazyDemo />,
+    },
+    {
+      id: "keys",
+      label: "Show keys & reconciliation demo",
+      enabled: showKeys,
+      onChange: setShowKeys,
+      content: showKeys && <KeysReconciliationDemo />,
+    },
+    {
+      id: "optimistic",
+      label: "Show useOptimistic demo (React 19)",
+      enabled: showOptimistic,
+      onChange: setShowOptimistic,
+      content: showOptimistic && <UseOptimisticDemo />,
+    },
+    {
+      id: "action-state",
+      label: "Show useActionState demo (React 19)",
+      enabled: showActionState,
+      onChange: setShowActionState,
+      content: showActionState && <UseActionStateDemo />,
+    },
+    {
+      id: "controlled",
+      label: "Show controlled vs uncontrolled demo",
+      enabled: showControlled,
+      onChange: setShowControlled,
+      content: showControlled && <ControlledVsUncontrolledDemo />,
     },
   ];
 
