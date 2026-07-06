@@ -16,6 +16,21 @@ const config: Config = {
       },
     ],
   },
+  reporters: [
+    "default",
+    [
+      "jest-html-reporters",
+      {
+        publicPath: "./test-report",
+        filename: "index.html",
+        pageTitle: "React Prep Test Report",
+        expand: true,
+        openReport: false,
+      },
+    ],
+  ],
+  coverageDirectory: "coverage",
+  coverageReporters: ["text", "lcov", "html"],
 };
 
 export default config;

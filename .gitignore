@@ -10,6 +10,8 @@
 
 # misc
 *.DS_Store
+/coverage/
+/test-report/
 
 # vercel
 .vercel
