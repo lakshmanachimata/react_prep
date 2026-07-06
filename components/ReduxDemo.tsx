@@ -4,14 +4,13 @@ import { memo, useMemo, type ReactNode } from "react";
 import { Provider } from "react-redux";
 import RenderDebugBadge from "@/components/RenderDebugBadge";
 import { useRenderDebug } from "@/hooks/useRenderDebug";
-import { decrement, increment, reset } from "@/lib/redux/counterSlice";
+import { decrement, fetchBonus, increment, reset } from "@/lib/redux/counterSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
+import { selectCounterSummary, selectDoubleCount } from "@/lib/redux/selectors";
 import { createDemoStore } from "@/lib/redux/store";
-
-// --- Leaf components (no counter props drilled from parents) ---
+import { toggleTheme } from "@/lib/redux/uiSlice";
 
 function ReduxCountDisplay() {
-  // Selector picks one slice; component re-renders only when that slice changes.
   const count = useAppSelector((state) => state.counter.count);
   const { count: renders } = useRenderDebug("ReduxCountDisplay", { count });
 
@@ -20,8 +19,7 @@ function ReduxCountDisplay() {
       <RenderDebugBadge name="ReduxCountDisplay" count={renders} />
       <h3>Count (deep leaf)</h3>
       <p>
-        Reads <code>state.counter.count</code> via <code>useAppSelector</code> — no
-        props from parents.
+        Reads <code>state.counter.count</code> via <code>useAppSelector</code>.
       </p>
       <p>
         count: <strong>{count}</strong>
@@ -31,7 +29,6 @@ function ReduxCountDisplay() {
 }
 
 function ReduxActionDisplay() {
-  // Separate selector from count — each panel can subscribe to different fields.
   const lastAction = useAppSelector((state) => state.counter.lastAction);
   const { count: renders } = useRenderDebug("ReduxActionDisplay", { lastAction });
 
@@ -39,10 +36,7 @@ function ReduxActionDisplay() {
     <div className="state-demo-panel">
       <RenderDebugBadge name="ReduxActionDisplay" count={renders} />
       <h3>Last action (deep leaf)</h3>
-      <p>
-        Subscribes only to <code>lastAction</code>. Re-renders when that field
-        changes.
-      </p>
+      <p>Subscribes only to <code>lastAction</code>.</p>
       <p>
         last action: <strong>{lastAction}</strong>
       </p>
@@ -51,7 +45,6 @@ function ReduxActionDisplay() {
 }
 
 function ReduxLabelDisplay() {
-  // `label` never changes — selector result stays equal, so react-redux skips re-render.
   const label = useAppSelector((state) => state.counter.label);
   const { count: renders } = useRenderDebug("ReduxLabelDisplay", { label });
 
@@ -59,10 +52,7 @@ function ReduxLabelDisplay() {
     <div className="state-demo-panel">
       <RenderDebugBadge name="ReduxLabelDisplay" count={renders} />
       <h3>Static label (deep leaf)</h3>
-      <p>
-        Selects a field that never updates. Render count should stay at 1 while
-        you click counter buttons.
-      </p>
+      <p>Render count should stay at 1 while you click counter buttons.</p>
       <p>
         label: <strong>{label}</strong>
       </p>
@@ -70,10 +60,7 @@ function ReduxLabelDisplay() {
   );
 }
 
-// --- Middle layers exist only to show "no prop drilling" ---
-
 function ReduxDeepLayer({ children }: { children: ReactNode }) {
-  // No useSelector here — still re-renders when an ancestor does, but needs no counter props.
   const { count: renders } = useRenderDebug("ReduxDeepLayer");
 
   return (
@@ -86,20 +73,19 @@ function ReduxDeepLayer({ children }: { children: ReactNode }) {
 }
 
 function ReduxToolbar() {
-  // Typed dispatch — sends action objects to the store (defined in counterSlice).
   const dispatch = useAppDispatch();
-  const { count: renders } = useRenderDebug("ReduxToolbar");
+  const status = useAppSelector((state) => state.counter.status);
+  const { count: renders } = useRenderDebug("ReduxToolbar", { status });
 
   return (
     <div className="state-demo-panel">
       <RenderDebugBadge name="ReduxToolbar" count={renders} />
-      <h3>Dispatch controls</h3>
+      <h3>1. Slice + dispatch</h3>
       <p>
-        <code>useAppDispatch</code> sends actions to the global store from any
-        component.
+        <code>useAppDispatch</code> + RTK action creators from{" "}
+        <code>counterSlice</code>.
       </p>
       <div className="effect-demo-controls">
-        {/* increment()/decrement()/reset() are RTK action creators → dispatch({ type, ... }) */}
         <button type="button" onClick={() => dispatch(decrement())}>
           -1
         </button>
@@ -109,19 +95,76 @@ function ReduxToolbar() {
         <button type="button" onClick={() => dispatch(reset())}>
           Reset
         </button>
+        <button
+          type="button"
+          disabled={status === "loading"}
+          onClick={() => dispatch(fetchBonus())}
+        >
+          {status === "loading" ? "Fetching bonus..." : "Async +5 bonus"}
+        </button>
       </div>
     </div>
   );
 }
 
+function ReduxThemePanel() {
+  const dispatch = useAppDispatch();
+  const theme = useAppSelector((state) => state.ui.theme);
+  const { count: renders } = useRenderDebug("ReduxThemePanel", { theme });
+
+  return (
+    <div className={`state-demo-panel redux-theme-panel redux-theme-${theme}`}>
+      <RenderDebugBadge name="ReduxThemePanel" count={renders} />
+      <h3>2. Multiple slices</h3>
+      <p>
+        <code>ui</code> slice is separate from <code>counter</code>. Toggle theme
+        here without touching counter state.
+      </p>
+      <p>
+        theme: <strong>{theme}</strong>
+      </p>
+      <button type="button" onClick={() => dispatch(toggleTheme())}>
+        Toggle theme
+      </button>
+    </div>
+  );
+}
+
+function ReduxSelectorPanel() {
+  const doubleCount = useAppSelector(selectDoubleCount);
+  const summary = useAppSelector(selectCounterSummary);
+  const { count: renders } = useRenderDebug("ReduxSelectorPanel", {
+    doubleCount,
+    summary,
+  });
+
+  return (
+    <div className="state-demo-panel">
+      <RenderDebugBadge name="ReduxSelectorPanel" count={renders} />
+      <h3>3. Memoized selectors</h3>
+      <p>
+        <code>createSelector</code> derives values from one or more slices. Re-runs
+        only when inputs change.
+      </p>
+      <p>
+        double count: <strong>{doubleCount}</strong>
+      </p>
+      <p>
+        cross-slice summary: <strong>{summary}</strong>
+      </p>
+    </div>
+  );
+}
+
 function ReduxDemoTree() {
-  // Must render inside <Provider> — hooks below need the store from context.
   const { count: renders } = useRenderDebug("ReduxDemoTree");
 
   return (
     <>
       <RenderDebugBadge name="ReduxDemoTree" count={renders} />
       <ReduxToolbar />
+      <ReduxThemePanel />
+      <ReduxSelectorPanel />
       <ReduxDeepLayer>
         <ReduxDeepLayer>
           <div className="redux-demo-leaves">
@@ -136,8 +179,6 @@ function ReduxDemoTree() {
 }
 
 function ReduxDemo() {
-  // One store for the whole demo tree; useMemo keeps the same instance across re-renders.
-  // Fresh store per mount so toggling the demo off/on resets state.
   const store = useMemo(() => createDemoStore(), []);
   const { count: renders } = useRenderDebug("ReduxDemo");
 
@@ -146,44 +187,34 @@ function ReduxDemo() {
       <RenderDebugBadge name="ReduxDemo" count={renders} />
       <h2>Redux playground</h2>
       <p className="drill-description">
-        Redux is global state built on the same reducer idea as{" "}
-        <code>useReducer</code>, but with a single store any component can read
-        or update via <code>useSelector</code> / <code>useDispatch</code>.
+        Redux Toolkit patterns: slices, async thunks, multiple reducers, memoized
+        selectors, and selective subscriptions via <code>useAppSelector</code>.
       </p>
 
       <div className="state-demo-panel">
-        <h3>Why Redux?</h3>
+        <h3>Patterns in this demo</h3>
         <ul className="effect-demo-legend">
           <li>
-            <strong>Single source of truth</strong> — one store holds app state
-            instead of scattered <code>useState</code> trees.
+            <strong>createSlice</strong> — reducers + auto action creators
           </li>
           <li>
-            <strong>No prop drilling</strong> — deep components subscribe directly;
-            middle layers do not pass counter props (see render badges).
+            <strong>createAsyncThunk</strong> — async bonus fetch with pending /
+            fulfilled states
           </li>
           <li>
-            <strong>Predictable updates</strong> — actions describe what happened;
-            reducers compute the next state (easy to test and reason about).
+            <strong>Multiple slices</strong> — <code>counter</code> + <code>ui</code>{" "}
+            in one store
           </li>
           <li>
-            <strong>Selective subscriptions</strong> — components re-render only
-            when their selected slice changes (<code>ReduxLabelDisplay</code> stays
-            quiet).
+            <strong>createSelector</strong> — derived + cross-slice values
           </li>
           <li>
-            <strong>DevTools</strong> — time-travel debugging, action log, state
-            inspection (Redux DevTools browser extension).
-          </li>
-          <li>
-            <strong>Scales past one component</strong> — middleware, async thunks,
-            RTK Query, multiple slices — when local <code>useReducer</code> or
-            Context becomes hard to maintain.
+            <strong>Provider</strong> — global store for the tree (contrast with
+            Zustand — no provider needed)
           </li>
         </ul>
       </div>
 
-      {/* Provider makes the store available to useAppSelector / useAppDispatch below */}
       <Provider store={store}>
         <ReduxDemoTree />
       </Provider>
@@ -191,5 +222,4 @@ function ReduxDemo() {
   );
 }
 
-// Skips re-rendering this shell when HookDemosSection re-renders with the same props (none here).
 export default memo(ReduxDemo);

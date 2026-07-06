@@ -25,6 +25,14 @@ const ContextOverrideDemo = dynamic(
   () => import("@/components/ContextOverrideDemo"),
   { ssr: false },
 );
+const ZustandDemo = dynamic(() => import("@/components/ZustandDemo"), { ssr: false });
+const PortalDemo = dynamic(() => import("@/components/PortalDemo"), { ssr: false });
+const ReduxThunkDemo = dynamic(() => import("@/components/ReduxThunkDemo"), {
+  ssr: false,
+});
+const TanStackQueryDemo = dynamic(() => import("@/components/TanStackQueryDemo"), {
+  ssr: false,
+});
 const UseTransitionDemo = dynamic(() => import("@/components/UseTransitionDemo"), {
   ssr: false,
 });
@@ -54,6 +62,10 @@ export default function HookDemosSection() {
   const [showContext, setShowContext] = useState(false);
   const [showContextAlternatives, setShowContextAlternatives] = useState(false);
   const [showContextOverride, setShowContextOverride] = useState(false);
+  const [showZustand, setShowZustand] = useState(false);
+  const [showPortal, setShowPortal] = useState(false);
+  const [showReduxThunk, setShowReduxThunk] = useState(false);
+  const [showTanStackQuery, setShowTanStackQuery] = useState(false);
   const [showTransition, setShowTransition] = useState(false);
   const [showDeferred, setShowDeferred] = useState(false);
   const [showLayoutEffect, setShowLayoutEffect] = useState(false);
@@ -115,6 +127,34 @@ export default function HookDemosSection() {
       enabled: showContextOverride,
       onChange: setShowContextOverride,
       content: showContextOverride && <ContextOverrideDemo />,
+    },
+    {
+      id: "zustand",
+      label: "Show Zustand demo",
+      enabled: showZustand,
+      onChange: setShowZustand,
+      content: showZustand && <ZustandDemo />,
+    },
+    {
+      id: "portal",
+      label: "Show React Portal demo",
+      enabled: showPortal,
+      onChange: setShowPortal,
+      content: showPortal && <PortalDemo />,
+    },
+    {
+      id: "redux-thunk",
+      label: "Show Redux Thunk demo",
+      enabled: showReduxThunk,
+      onChange: setShowReduxThunk,
+      content: showReduxThunk && <ReduxThunkDemo />,
+    },
+    {
+      id: "tanstack-query",
+      label: "Show TanStack Query demo",
+      enabled: showTanStackQuery,
+      onChange: setShowTanStackQuery,
+      content: showTanStackQuery && <TanStackQueryDemo />,
     },
     {
       id: "transition",
