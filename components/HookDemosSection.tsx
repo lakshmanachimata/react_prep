@@ -69,6 +69,9 @@ const ControlledVsUncontrolledDemo = dynamic(
   () => import("@/components/ControlledVsUncontrolledDemo"),
   { ssr: false },
 );
+const VirtualListDemo = dynamic(() => import("@/components/VirtualListDemo"), {
+  ssr: false,
+});
 
 type DemoToggle = {
   id: string;
@@ -102,6 +105,7 @@ export default function HookDemosSection() {
   const [showOptimistic, setShowOptimistic] = useState(false);
   const [showActionState, setShowActionState] = useState(false);
   const [showControlled, setShowControlled] = useState(false);
+  const [showVirtualList, setShowVirtualList] = useState(false);
   const { count } = useRenderDebug("HookDemosSection");
 
   const demos: DemoToggle[] = [
@@ -265,6 +269,13 @@ export default function HookDemosSection() {
       enabled: showControlled,
       onChange: setShowControlled,
       content: showControlled && <ControlledVsUncontrolledDemo />,
+    },
+    {
+      id: "virtual-list",
+      label: "Show list virtualization demo (react-virtuoso)",
+      enabled: showVirtualList,
+      onChange: setShowVirtualList,
+      content: showVirtualList && <VirtualListDemo />,
     },
   ];
 
