@@ -37,7 +37,7 @@ export default function GreetingSection() {
       {/* <RenderDebugBadge name="GreetingSection" count={count} />
       <NameForm onSubmit={setName} onNameChange={setName} throttleMs={300} />
       <Welcome name={name} /> */}
-      <FruitSection /> 
+      {/* <FruitSection />  */}
       {/* <PropRoot /> */}
       <label className="effect-demo-toggle">
         <input

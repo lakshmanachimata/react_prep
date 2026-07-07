@@ -270,8 +270,6 @@ export default function HookDemosSection() {
 
   return (
     <section className="hook-demos-section">
-      <RenderDebugBadge name="HookDemosSection" count={count} />
-      <h2 className="drill-title">More React hooks</h2>
       {demos.map((demo) => (
         <div key={demo.id} className="hook-demo-toggle-group">
           <label className="effect-demo-toggle">
