@@ -4,14 +4,16 @@ import { lazy, memo, Suspense, useState } from "react";
 import RenderDebugBadge from "@/components/RenderDebugBadge";
 import { useRenderDebug } from "@/hooks/useRenderDebug";
 
+// Artificial delay so the Suspense fallback is visible in the demo.
 function delayImport<T>(loader: () => Promise<T>, ms: number) {
   return new Promise<T>((resolve) => {
     window.setTimeout(() => resolve(loader()), ms);
   });
 }
 
+// lazy() returns a component that suspends until import() resolves.
 const LazyLoadedPanel = lazy(() =>
-  delayImport(() => import("@/components/LazyLoadedPanel"), 900),
+  delayImport(() => import("@/components/LazyLoadedPanel"), 2000),
 );
 
 function SuspenseLazyDemo() {
@@ -35,6 +37,7 @@ function SuspenseLazyDemo() {
         />
         Mount lazy panel
       </label>
+      {/* Suspense catches the suspend thrown by lazy() and shows fallback. */}
       {showLazy && (
         <Suspense fallback={<p className="state-demo-note">Loading chunk…</p>}>
           <LazyLoadedPanel />

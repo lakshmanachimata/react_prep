@@ -15,6 +15,7 @@ function delay(ms: number) {
   });
 }
 
+// Action signature: (previousState, formData) => nextState (can be async).
 async function saveName(
   _prev: SaveState,
   formData: FormData,
@@ -34,6 +35,7 @@ async function saveName(
 }
 
 function UseActionStateDemo() {
+  // [result, formAction, isPending] — replaces manual loading/error useState.
   const [state, formAction, isPending] = useActionState(saveName, {
     error: null,
     message: null,
@@ -49,6 +51,7 @@ function UseActionStateDemo() {
         for async submits without manual <code>useState</code> for loading and
         errors. Try submitting empty or the word <code>error</code>.
       </p>
+      {/* action={formAction} wires submit to saveName; no onSubmit handler needed. */}
       <form className="prop-user-form" action={formAction}>
         <label>
           Name

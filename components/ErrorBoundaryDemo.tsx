@@ -14,20 +14,23 @@ type BoundaryProps = {
   onReset: () => void;
 };
 
-// Error boundaries must be class components (no hook equivalent yet).
+// Error boundaries must be class components — hooks cannot catch render errors yet.
 class DemoErrorBoundary extends Component<BoundaryProps, BoundaryState> {
   state: BoundaryState = { hasError: false, message: null };
 
+  // Called during render when a child throws; return new state for fallback UI.
   static getDerivedStateFromError(error: Error): BoundaryState {
     return { hasError: true, message: error.message };
   }
 
+  // Side effects only (logging, reporting) — not for setState.
   componentDidCatch(error: Error, info: ErrorInfo) {
     console.error("[DemoErrorBoundary]", error, info.componentStack);
   }
 
   private handleReset = () => {
     this.setState({ hasError: false, message: null });
+    // Parent remounts children via key so BuggyCounter state is fresh.
     this.props.onReset();
   };
 
@@ -53,6 +56,7 @@ function BuggyCounter() {
   const [armed, setArmed] = useState(false);
   const { count: renders } = useRenderDebug("BuggyCounter", { count, armed });
 
+  // Throw during render — only caught by an ancestor error boundary.
   if (armed && count >= 3) {
     throw new Error("Counter reached the danger zone (3+)");
   }
@@ -77,6 +81,7 @@ function BuggyCounter() {
 }
 
 function ErrorBoundaryDemo() {
+  // Bumping key forces DemoErrorBoundary + BuggyCounter to remount on reset.
   const [boundaryKey, setBoundaryKey] = useState(0);
   const { count } = useRenderDebug("ErrorBoundaryDemo");
 

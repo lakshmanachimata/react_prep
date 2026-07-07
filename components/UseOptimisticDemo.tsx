@@ -11,7 +11,9 @@ function delay(ms: number) {
 }
 
 function UseOptimisticDemo() {
+  // Source of truth — updated after the fake network call finishes.
   const [messages, setMessages] = useState<string[]>([]);
+  // Derived "preview" state shown immediately; reverts/syncs when messages updates.
   const [optimisticMessages, addOptimistic] = useOptimistic(
     messages,
     (current, newMessage: string) => [...current, `${newMessage} (sending…)`],
@@ -31,8 +33,10 @@ function UseOptimisticDemo() {
 
     setDraft("");
     startTransition(() => {
+      // UI updates instantly with "(sending…)" suffix.
       addOptimistic(text);
-      void delay(1200).then(() => {
+      void delay(2000).then(() => {
+        // Real state commit replaces the optimistic entry.
         setMessages((current) => [...current, text]);
       });
     });
@@ -60,6 +64,7 @@ function UseOptimisticDemo() {
           {isPending ? "Sending…" : "Send"}
         </button>
       </form>
+      {/* Render optimisticMessages, not messages — user sees instant feedback. */}
       <ul className="fruit-list">
         {optimisticMessages.map((message, index) => (
           <li key={`${message}-${index}`}>{message}</li>

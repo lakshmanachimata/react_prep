@@ -5,7 +5,9 @@ import RenderDebugBadge from "@/components/RenderDebugBadge";
 import { useRenderDebug } from "@/hooks/useRenderDebug";
 
 function ControlledVsUncontrolledDemo() {
+  // React is the single source of truth — every keystroke updates state.
   const [controlled, setControlled] = useState("React");
+  // Ref points at DOM node; value lives in the input, not in React state.
   const uncontrolledRef = useRef<HTMLInputElement>(null);
   const { count } = useRenderDebug("ControlledVsUncontrolledDemo", {
     controlled,
@@ -24,6 +26,7 @@ function ControlledVsUncontrolledDemo() {
       <div className="keys-demo-columns">
         <div className="state-demo-panel">
           <h3>Controlled</h3>
+          {/* value + onChange: React re-renders on every keystroke. */}
           <input
             type="text"
             value={controlled}
@@ -38,6 +41,7 @@ function ControlledVsUncontrolledDemo() {
         </div>
         <div className="state-demo-panel">
           <h3>Uncontrolled</h3>
+          {/* defaultValue sets initial DOM value only; React does not track changes. */}
           <input
             ref={uncontrolledRef}
             type="text"

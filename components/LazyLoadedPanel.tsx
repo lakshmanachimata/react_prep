@@ -4,6 +4,7 @@ import { memo } from "react";
 import RenderDebugBadge from "@/components/RenderDebugBadge";
 import { useRenderDebug } from "@/hooks/useRenderDebug";
 
+// Separate file so bundler can put this in its own async chunk.
 function LazyLoadedPanel() {
   const { count } = useRenderDebug("LazyLoadedPanel");
 

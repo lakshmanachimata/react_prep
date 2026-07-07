@@ -15,6 +15,7 @@ const INITIAL_ITEMS: TodoItem[] = [
   { id: "c", label: "Cherry" },
 ];
 
+// Each row owns local input state — survives re-renders only if key is stable.
 function TodoRow({ item }: { item: TodoItem }) {
   const [draft, setDraft] = useState(item.label);
   const { count } = useRenderDebug(`TodoRow:${item.id}`, { draft });
@@ -50,6 +51,8 @@ function KeyedList({
       <ul className="keys-demo-list">
         {items.map((item, index) => (
           <TodoRow
+            // index as key: after reverse, React reuses wrong component instances.
+            // item.id as key: each row keeps its draft text across reorder.
             key={useIndexAsKey ? index : item.id}
             item={item}
           />
@@ -81,6 +84,7 @@ function KeysReconciliationDemo() {
           Reverse list
         </button>
       </div>
+      {/* Same data, side-by-side: edit a row, then reverse to see the difference. */}
       <div className="keys-demo-columns">
         <KeyedList
           title="Bad: key={index}"
